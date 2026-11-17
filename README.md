@@ -1,45 +1,41 @@
 # BankFlow – Full-Stack Banking Application
 
-BankFlow is a full-stack banking application built using **React, FastAPI, PostgreSQL, and SQLAlchemy**. It provides secure user authentication, account management, deposits, withdrawals, money transfers, transaction history, financial summaries, and PDF bank statement generation.
+BankFlow is a full-stack banking application built using **FastAPI, PostgreSQL, SQLAlchemy, and React**. It provides secure user authentication, account management, financial transactions, transaction history, password recovery, and PDF bank statement generation.
 
-The application includes a responsive frontend and a RESTful backend, with JWT-based authentication and database-backed transaction management.
+The project demonstrates REST API development, database management, authentication, frontend integration, and transaction handling.
 
 ## Features
 
-### Authentication and Security
+### Authentication & Security
 - User registration and login.
 - JWT-based authentication.
 - Secure password hashing.
-- Password change functionality.
-- Protected API endpoints.
+- Change password functionality.
+- Forgot password and reset password functionality.
+- Reset tokens with expiry and single-use validation.
 
 ### Account Management
 - Automatic savings account creation during registration.
-- Account details and balance display.
-- Account status information.
+- Unique account number generation.
+- Account balance and account details.
+- Minimum balance protection.
 
 ### Banking Transactions
-- Deposit money into an account.
-- Withdraw money with minimum balance protection.
-- Transfer money between accounts.
-- Transaction validation and balance checks.
-- Database transaction handling for financial operations.
-
-### Dashboard and Transaction Management
-- Account balance overview.
-- Financial summary showing deposits, withdrawals, and transfers.
-- Recent transaction activity.
+- Deposit money.
+- Withdraw money with minimum balance validation.
+- Transfer funds between accounts.
+- Transactional integrity during transfers.
 - Transaction history with pagination and filtering.
+- Transaction summary.
 - Transaction lookup using transaction reference.
-- PDF bank statement generation.
 
-### Frontend
-- Login and registration pages.
-- Banking dashboard.
-- Deposit, withdrawal, and transfer interfaces.
-- Account details page.
-- Transaction history page.
-- Responsive layouts for different screen sizes.
+### Additional Features
+- PDF bank statement generation.
+- Interactive API documentation using Swagger UI.
+- Responsive React frontend.
+- Dashboard with account balance and financial summary.
+- Recent transaction display.
+- Automated testing using Pytest.
 
 ## Tech Stack
 
@@ -47,17 +43,30 @@ The application includes a responsive frontend and a RESTful backend, with JWT-b
 |---|---|
 | Python | Backend programming |
 | FastAPI | REST API development |
-| React | Frontend development |
-| Vite | Frontend development server and build tool |
-| JavaScript | Frontend logic |
-| React Router | Client-side navigation |
-| CSS | Frontend styling |
 | PostgreSQL | Relational database |
 | SQLAlchemy | ORM and database operations |
 | Pydantic | Request validation |
 | JWT | Authentication |
-| Pytest | Automated backend testing |
+| React | Frontend development |
+| JavaScript | Frontend logic |
+| HTML & CSS | User interface and styling |
+| Pytest | Automated testing |
 | ReportLab | PDF statement generation |
+| Vite | Frontend development server |
+
+## Application Screenshots
+
+### Login Page
+![BankFlow Login](screenshots/Login.png)
+
+### Dashboard
+![BankFlow Dashboard](screenshots/Dashboard.png)
+
+### Transactions
+![BankFlow Transactions](screenshots/Transactions.png)
+
+### My Account
+![BankFlow My Account](screenshots/MyAccount.png)
 
 ## API Endpoints
 
@@ -69,12 +78,14 @@ The application includes a responsive frontend and a RESTful backend, with JWT-b
 | POST | `/auth/login` | Login and receive JWT |
 | GET | `/auth/me` | Get authenticated user |
 | POST | `/auth/change-password` | Change password |
+| POST | `/auth/forgot-password` | Generate password reset token |
+| POST | `/auth/reset-password` | Reset password using token |
 
 ### Accounts
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/accounts/me` | Get authenticated user's account details |
+| GET | `/accounts/me` | Get authenticated user's account |
 
 ### Transactions
 
@@ -86,57 +97,9 @@ The application includes a responsive frontend and a RESTful backend, with JWT-b
 | GET | `/transactions/history` | View transaction history |
 | GET | `/transactions/summary` | Get transaction summary |
 | GET | `/transactions/statement` | Download PDF bank statement |
-| GET | `/transactions/{transaction_reference}` | Get transaction details |
+| GET | `/transactions/{transaction_reference}` | Retrieve transaction details |
 
-## Project Structure
-
-```text
-BankFlow/
-│
-├── backend/
-│   ├── app/
-│   │   ├── core/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   ├── database.py
-│   │   ├── main.py
-│   │   └── security.py
-│   │
-│   ├── tests/
-│   ├── requirements.txt
-│   └── .env
-│
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── Transactions.jsx
-│   │   │   └── Account.jsx
-│   │   │
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   └── index.css
-│   │
-│   ├── package.json
-│   └── index.html
-│
-└── README.md
-```
-
-## Installation and Setup
-
-### Prerequisites
-
-Make sure you have installed:
-
-- Python
-- Node.js and npm
-- PostgreSQL
-- Git
+## Installation & Setup
 
 ### 1. Clone the repository
 
@@ -159,13 +122,13 @@ Create a virtual environment:
 python -m venv venv
 ```
 
-Activate it on Windows PowerShell:
+Activate it on Windows:
 
 ```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-Install the dependencies:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -173,7 +136,7 @@ pip install -r requirements.txt
 
 ### 3. Configure Environment Variables
 
-Create a `.env` file inside the backend directory:
+Create a `.env` file inside the `backend` directory:
 
 ```env
 DB_USER=postgres
@@ -184,82 +147,121 @@ DB_NAME=bankflow_db
 SECRET_KEY=your_secret_key
 ```
 
-Replace the values with your local PostgreSQL credentials and a securely generated secret key.
-
-**Important:** Never commit your `.env` file or expose database credentials and secret keys on GitHub.
+Replace the values with your local PostgreSQL credentials and a secure secret key.
 
 ### 4. Run the Backend
 
-From the backend directory, run:
+From the `backend` directory:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The backend API will run at:
+The backend will run at:
 
 `http://127.0.0.1:8000`
 
 ### 5. Frontend Setup
 
-Open a separate terminal and navigate to the frontend directory:
+Open another terminal and navigate to the frontend directory:
 
 ```bash
 cd frontend
 ```
 
-Install the frontend dependencies:
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-Start the Vite development server:
+Start the frontend development server:
 
 ```bash
 npm run dev
 ```
 
-Open the local frontend URL displayed in your terminal, usually:
+Open the local URL displayed by Vite, usually:
 
 `http://localhost:5173`
 
-Make sure the backend and PostgreSQL database are running while using the frontend.
-
 ## API Documentation
 
-Interactive Swagger documentation:
+Swagger UI:
 
 `http://127.0.0.1:8000/docs`
 
-ReDoc documentation:
+ReDoc:
 
 `http://127.0.0.1:8000/redoc`
 
-## Running Automated Tests
+## Running Tests
 
-Navigate to the backend directory, activate your virtual environment, and run:
+Navigate to the backend directory and run:
 
 ```bash
 python -m pytest -v
 ```
 
-## Testing Status
+The backend test suite previously reported **7 passing tests**.
 
-- Automated backend tests: **7 passing**
-- Manual application testing: Completed for registration, authentication, transactions, account activity, and PDF statement generation.
-- Responsive layout testing: To be verified.
+## Project Structure
 
-## Future Improvements
+```text
+BankFlow/
+│
+├── backend/
+│   ├── app/
+│   │   ├── core/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   ├── database.py
+│   │   ├── main.py
+│   │   └── security.py
+│   │
+│   ├── tests/
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   │   ├── Account.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   └── Transactions.jsx
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   │
+│   ├── package.json
+│   └── vite.config.js
+│
+├── screenshots/
+│   ├── Dashboard.png
+│   ├── Login.png
+│   ├── MyAccount.png
+│   └── Transactions.png
+│
+├── .gitignore
+└── README.md
+```
 
-- Additional frontend and backend test coverage.
-- Enhanced transaction filtering and reporting.
-- Improved security and production configuration.
-- Cloud deployment.
-- Additional account management features.
+## Security & Demonstration Notes
+
+- Passwords are stored as secure hashes rather than plain text.
+- Protected endpoints require JWT authentication.
+- Transaction operations include balance validation and database transaction handling.
+- Password recovery currently uses a local demonstration token returned by the API instead of email delivery.
+- Reset tokens are currently stored in application memory and are lost when the backend restarts. Persistent token storage and email-based recovery would be needed for production use.
 
 ## Disclaimer
 
-BankFlow is an educational portfolio project developed to demonstrate full-stack development, REST API design, database management, authentication, and financial transaction workflows.
-
-It is not intended for real banking or production financial transactions.
+BankFlow is an educational portfolio project developed to demonstrate full-stack application development. It is not intended for real banking or production financial transactions.
