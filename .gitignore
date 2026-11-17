@@ -1,15 +1,27 @@
-# Secrets
-.env
-.env.*
-
-# Allow example configuration
-!.env.example
 
 # Python
-venv/
 __pycache__/
-*.pyc
+*.py[cod]
+venv/
+.venv/
 .pytest_cache/
+.coverage
 
-# IDE
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+npm-debug.log*
+
+# IDE and operating system
 .vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated files
+*.log
